@@ -1,6 +1,6 @@
 import UIKit
 
-var str = "Advanced Enums"
+var str = "The Basics"
 
 // Or to floating point (also note the fancy unicode in enum cases)
 enum Constants: Double {
