@@ -1,6 +1,6 @@
 //: [Previous](@previous)
 
-import Foundation
+import UIKit
 
 var str = "Advanced Enums"
 
@@ -120,3 +120,63 @@ enum Bag<T: Sequence> where T.Iterator.Element: Equatable {
     case empty
     case full(contents: [T])
 }
+
+
+// MARK: - Recursive / Indirect Types
+//Indirect types allow you to define enums where the associated value of a case is the very same enum again.
+
+// Consider that you want to define a file system representations with files and folders containing files.
+enum FileNode {
+  case file(name: String)
+  indirect case folder(name: String, files: [FileNode])
+}
+
+// The indirect keyword tells the compiler to handle this enum case indirectly.
+// You can also add the keyword for the whole enum.
+
+//As an example imagine mapping a binary tree:
+indirect enum Tree<Element: Comparable> {
+    case empty
+    case node(Tree<Element>,Element,Tree<Element>)
+}
+
+
+
+// MARK: - Custom Data Types
+
+// If we neglect associated values, then the value of an enum can only be an Integer, Floating Point, String, or Boolean.
+// If you need to support something else, you can do so by implementing the -"ExpressibleByStringLiteral"- protocol which allows the type in question to be serialized to and from String.
+
+// As an example, imagine you'd like to store the different screen sizes of iOS devices in an enum:
+enum Devices: CGSize {
+   case iPhone3GS = "320,480"
+   case iPhone5 = "320,568"
+   case iPhone6 = "375,667"
+   case iPhone6Plus = "414,736"
+}
+// However, this doesn't compile because CGSize is not a literal and can't be used as an enum value.
+// Instead, what you need to do is add a type extension for the ExpressibleByStringLiteral protocol.
+
+
+// The protocol requires us to implement an initializer that receives a String.
+// Next, we need to take this String an convert it into a CGSize. Not any String can be a CGSize.
+// So if the value is wrong, we will crash with an error as this code will be executed by Swift during application startup.
+// Our string format for sizes is: width, height.
+extension CGSize: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        let components = value.split(separator: ",")
+        guard components.count == 2,
+            let width = Int(components[0]),
+            let height = Int(components[1])
+            else { fatalError("Invalid Format \(value)") }
+        self.init(width: width, height: height)
+    }
+}
+// The initial values have to be written as a String, since that's what the enum will use.
+// (remember, we complied with ExpressibleByStringLiteral protocol, so that the String can be converted to our CGSize type.)
+
+// Keep in mind that in order to get the actual CGSize value, we have to access the rawValue of the enum.
+let a = Devices.iPhone5
+let b = a.rawValue
+print("the phone size string is \(a), width is \(b.width), height is \(b.height)")
+// This works, because we explicitly told Swift that a CGSize can be created from any String.
