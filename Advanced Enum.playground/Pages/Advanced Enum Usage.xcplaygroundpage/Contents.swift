@@ -180,3 +180,52 @@ let a = Devices.iPhone5
 let b = a.rawValue
 print("the phone size string is \(a), width is \(b.width), height is \(b.height)")
 // This works, because we explicitly told Swift that a CGSize can be created from any String.
+
+
+// MARK: - Comparing Enums
+
+// Just like need to compare strings ("world" == "hello") or numbers you sometimes also need to compare enums.
+// For very simple ones, like the following, this is easy as Swift takes care of it:
+enum Toggle {
+  case on, off
+}
+
+Toggle.on == Toggle.off
+
+// But what if you have a more complex enum with associated values like this one?
+enum Character {
+  case warrior(name: String, level: Int, strength: Int)
+  case wizard(name: String, magic: Int, spells: [String])
+}
+
+// If you'd try to compare to instances of Character Swift would complain.
+// By default, it doesn't know how to compare enum types that have associated values.
+// However, you can explicitly tell Swift to just compare all the values of each case and if they're the same, then the types are equal.
+// To do that, you'd just add an empty conformance to the Equatable protocol:
+enum Character: Equatable {
+  case warrior(name: String, level: Int, strength: Int)
+  case wizard(name: String, magic: Int, spells: [String])
+}
+// This only works if all the values in your cases are also Equatable. This works in our example as Int, String and arrays of String are Equatable by default.
+
+// If that is not an option, you an always implement a custom Equatable conformance:
+
+// Not Equatable Stock
+struct Stock { ... }
+
+enum Trade {
+    case buy(stock: Stock, amount: Int)
+    case sell(stock: Stock, amount: Int)
+}
+
+func ==(lhs: Trade, rhs: Trade) -> Bool {
+   switch (lhs, rhs) {
+   case let (.buy(stock1, amount1), .buy(stock2, amount2))
+         where stock1 == stock2 && amount1 == amount2:
+         return true
+   case let (.sell(stock1, amount1), .sell(stock2, amount2))
+         where stock1 == stock2 && amount1 == amount2:
+         return true
+   default: return false
+   }
+}
