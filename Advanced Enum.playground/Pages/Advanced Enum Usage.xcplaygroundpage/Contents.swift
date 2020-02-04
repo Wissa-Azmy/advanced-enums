@@ -202,7 +202,7 @@ enum Character {
 // By default, it doesn't know how to compare enum types that have associated values.
 // However, you can explicitly tell Swift to just compare all the values of each case and if they're the same, then the types are equal.
 // To do that, you'd just add an empty conformance to the Equatable protocol:
-enum Character: Equatable {
+enum Character3: Equatable {
   case warrior(name: String, level: Int, strength: Int)
   case wizard(name: String, magic: Int, spells: [String])
 }
@@ -211,20 +211,22 @@ enum Character: Equatable {
 // If that is not an option, you an always implement a custom Equatable conformance:
 
 // Not Equatable Stock
-struct Stock { ... }
+struct Stock {
+    let name: String
+}
 
-enum Trade {
+enum Trade2 {
     case buy(stock: Stock, amount: Int)
     case sell(stock: Stock, amount: Int)
 }
 
-func ==(lhs: Trade, rhs: Trade) -> Bool {
+func ==(lhs: Trade2, rhs: Trade2) -> Bool {
    switch (lhs, rhs) {
    case let (.buy(stock1, amount1), .buy(stock2, amount2))
-         where stock1 == stock2 && amount1 == amount2:
+    where stock1.name == stock2.name && amount1 == amount2:
          return true
    case let (.sell(stock1, amount1), .sell(stock2, amount2))
-         where stock1 == stock2 && amount1 == amount2:
+    where stock1.name == stock2.name && amount1 == amount2:
          return true
    default: return false
    }
