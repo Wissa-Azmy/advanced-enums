@@ -237,7 +237,7 @@ func ==(lhs: Trade2, rhs: Trade2) -> Bool {
 
 // Imagine you'd want to initialize an enum with custom data. In our example we have a Device enum that represents Apple devices and we'd like to also initialize them with non-standard names. Here's the enum:
 
-enum DevicesByApple {
+enum AppleDevices{
   case appleWatch
 }
 // Now if a user accidentally enters iWatch as their device, we still want to map this to the correct AppleWatch case. To do that, we will implement a custom initializer that sets self to the correct type:
@@ -267,3 +267,22 @@ enum NumberCategory {
         else { self = .huge }
    }
 }
+
+
+
+// MARK: - Iterating over Enum Cases
+// Say you've created a nice new enum with several cases:
+// You have to explicitly tell the Swift compiler that you wish for your enum to be iterable.
+
+// You do this by conforming to the empty CaseIterable protocol:
+enum Drink: String, CaseIterable {
+  case coke, beer, water, soda, lemonade, wine, vodka, gin
+}
+
+// Now, you can easily iterate over your enum with the new allCases property:
+for drink in Drink.allCases {
+  print("For lunch I like to drink \(drink)")
+}
+
+// This works only if your enum cases do not contain any associated values.
+// So there it is, CaseIterable is a great Swift feature, however keep in mind that it can only be used with simple enum cases.
