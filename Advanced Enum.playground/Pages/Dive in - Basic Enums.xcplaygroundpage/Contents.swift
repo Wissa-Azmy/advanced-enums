@@ -1,6 +1,14 @@
 import UIKit
 
 var str = "The Basics"
+// "Enums declare types with finite sets of possible states and accompanying values.
+// With nesting, methods, associated values, and pattern matching, however, enums can define any hierarchically organized data."
+
+// You can map enum to strings
+enum House: String {
+    case baratheon = "Ours is the Fury"
+    case greyjoy = "We Do Not Sow"
+}
 
 // Or to floating point (also note the fancy unicode in enum cases)
 enum Constants: Double {
@@ -19,12 +27,12 @@ enum CompassPoint: String {
     case north, south, east, west   // north = "north", ... west = "west"
 }
 
-//Swift supports the following types for the value of an enum:
+// Swift supports the following types for the value of an enum:
 // Integer
 // Floating Point
 // String
 // Boolean
-//You can support more types by implementing a specific protocol.
+// You can support more types by implementing a specific protocol.
 
 //If you want to access the values, you can do so with the rawValue property:
 let bestDirection = CompassPoint.north
